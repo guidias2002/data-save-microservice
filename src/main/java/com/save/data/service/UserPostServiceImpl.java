@@ -1,5 +1,6 @@
 package com.save.data.service;
 
+import com.save.data.dto.UserConfirmationEmailDto;
 import com.save.data.dto.UserPostDto;
 import com.save.data.entity.UserPostEntity;
 import com.save.data.repository.UserPostRepository;
@@ -14,15 +15,21 @@ public class UserPostServiceImpl implements UserPostService {
     @Autowired
     private UserPostRepository userPostRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public void createUser(UserPostDto userPostDto) {
         userPostRepository.findByEmailIgnoreCase(userPostDto.getEmail()).ifPresentOrElse(user -> {
             throw new RuntimeException("Email já está cadastrado.");
         }, () -> {
             UserPostEntity userPostEntity = mapUserDtoToEntity(userPostDto);
+
             userPostRepository.save(userPostEntity);
+            emailService.sendUserConfirmationEmail(userPostDto);
         });
     }
+
 
     private UserPostEntity mapUserDtoToEntity(UserPostDto userPostDto){
         UserPostEntity userPostEntity = new UserPostEntity();

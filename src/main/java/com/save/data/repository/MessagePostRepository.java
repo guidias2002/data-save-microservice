@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface MessagePostRepository extends JpaRepository<MessagePostEntity, Long> {
     Optional<MessagePostEntity> findByFromEmail(String email);
+
 }
