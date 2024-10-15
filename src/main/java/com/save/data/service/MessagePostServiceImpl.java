@@ -18,10 +18,16 @@ public class MessagePostServiceImpl implements MessagePostService{
     @Autowired
     private UserPostRepository userPostRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public void createMessage(MessagePostDto messagePostDto) {
+
         messagePostRepository.save(mapMessageDtoToEntity(messagePostDto));
+        emailService.sendEmailMessage(messagePostDto);
     }
+
 
     private MessagePostEntity mapMessageDtoToEntity(MessagePostDto messagePostDto){
         MessagePostEntity messagePostEntity = new MessagePostEntity();
